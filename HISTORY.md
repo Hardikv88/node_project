@@ -48,3 +48,15 @@ Status: Success
 
 ---
 
+
+---
+
+Date & Time: 3 June 2026 at 11:53:52 am
+Agent Name: Trae AI
+Task Title: Add new user fields and update API
+Prompt: Add more columns to User model (gender, city, address, userProfileImage) and create update user API that updates user data without changing userId, userEmail, or userPassword
+Response Summary: Updated User model with new optional fields, added validateUpdateUser middleware, implemented updateUser in AuthService and AuthController, and added PUT /api/auth/update endpoint
+Status: Success
+
+---
+

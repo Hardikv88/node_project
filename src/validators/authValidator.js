@@ -60,7 +60,33 @@ const validateLogin = (req, res, next) => {
   next();
 };
 
+const validateUpdateUser = (req, res, next) => {
+  const { userId, userEmail, userPassword } = req.body;
+  const errors = [];
+
+  if (userId) {
+    errors.push('userId cannot be updated');
+  }
+  if (userEmail) {
+    errors.push('userEmail cannot be updated');
+  }
+  if (userPassword) {
+    errors.push('userPassword cannot be updated');
+  }
+
+  if (errors.length > 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Validation failed',
+      errors,
+    });
+  }
+
+  next();
+};
+
 module.exports = {
   validateRegister,
   validateLogin,
+  validateUpdateUser,
 };

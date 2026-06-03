@@ -34,6 +34,26 @@ module.exports = (sequelize) => {
       defaultValue: 'User',
       field: 'user_role',
     },
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'gender',
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'city',
+    },
+    address: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+      field: 'address',
+    },
+    userProfileImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      field: 'user_profile_image',
+    },
   }, {
     tableName: 'users',
     timestamps: true,

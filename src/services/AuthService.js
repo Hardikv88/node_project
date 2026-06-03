@@ -63,6 +63,21 @@ class AuthService {
     return userWithoutPassword;
   }
 
+  async updateUser(userId, updateData) {
+    const user = await User.findOne({
+      where: { userId },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    await user.update(updateData);
+
+    const { userPassword: _, ...userWithoutPassword } = user.toJSON();
+    return userWithoutPassword;
+  }
+
   generateToken(user) {
     const payload = {
       userId: user.userId,

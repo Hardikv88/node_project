@@ -60,3 +60,51 @@ Status: Success
 
 ---
 
+
+---
+
+Date & Time: 4 June 2026 at 04:28:53 pm
+Agent Name: Trae AI
+Task Title: Implement S3 profile image upload and multipart/form-data support
+Prompt: Update User update API to support multipart/form-data and profile image upload to AWS S3. Change registration API to accept multipart/form-data.
+Response Summary: Added S3 uploader utility, multer config, updated User model (profileImage), updated AuthService/AuthController/routes to handle file uploads and multipart/form-data.
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 4 June 2026 at 04:46:40 pm
+Agent Name: Trae AI
+Task Title: Fix update API middleware and error handling
+Prompt: Fix Postman errors on update API
+Response Summary: Fixed middleware order, added global error handler in app.js, moved Multer error handling there, cleaned up authValidator.js
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 4 June 2026 at 04:49:37 pm
+Agent Name: Trae AI
+Task Title: Revert register route to original
+Prompt: Revert register API to original, only update API has file upload
+Response Summary: Reverted authRoutes.js register route to use only validateRegister, kept file upload only for update
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 5 June 2026 at 11:02:34 am
+Agent Name: Trae AI
+Task Title: Fix profileImage upload errors
+Prompt: Fix errors when passing profileImage to update API
+Response Summary: Added error handling in s3Uploader.js, made S3 upload optional if credentials not set, updated AuthService to handle null from uploadToS3
+Status: Success
+
+---
+

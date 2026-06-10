@@ -2,7 +2,17 @@ const { User } = require('../models');
 
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      where: {
+        userId: {
+          [require('sequelize').Op.ne]: req.user.userId,
+        },
+      },
+      attributes: {
+        exclude: ['userPassword'],
+      },
+      order: [['created_at', 'DESC']],
+    });
     res.status(200).json({
       success: true,
       data: users,

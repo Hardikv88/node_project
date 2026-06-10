@@ -108,3 +108,24 @@ Status: Success
 
 ---
 
+
+Date & Time: 5 June 2026 at 11:02:34 am
+Agent Name: Trae AI
+Task Title: Postman to show error fix this problem
+Prompt: Fix errors when passing profileImage to update API
+Response Summary: First, let's check if there are any immediate code issues, then start the server and test it.
+Status: Success
+
+---
+
+---
+
+Date & Time: 10 June 2026 at 11:39:28 am
+Agent Name: Trae AI
+Task Title: Implement GET /api/users API with JWT authentication
+Prompt: GET /api/users API requirements: valid JWT token, exclude current user, exclude password, sort newest first
+Response Summary: Updated userRoutes.js to add authenticateToken middleware, updated userController.js getAllUsers to exclude current user, exclude userPassword, and sort by createdAt DESC
+Status: Success
+
+---
+

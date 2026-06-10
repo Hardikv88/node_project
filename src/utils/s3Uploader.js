@@ -19,7 +19,7 @@ const uploadToS3 = async (file) => {
     }
 
     const fileExtension = file.originalname.split('.').pop();
-    const uniqueFileName = `${uuidv4()}-${Date.now()}.${fileExtension}`;
+    const uniqueFileName = `avatars/${uuidv4()}-${Date.now()}.${fileExtension}`;
 
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,

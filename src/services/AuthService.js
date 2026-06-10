@@ -1,11 +1,12 @@
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { uploadToS3 } = require('../utils/s3Uploader');
 require('dotenv').config();
 
 class AuthService {
-  async registerUser(userData) {
-    const { userName, userEmail, userPassword } = userData;
+  async registerUser(userData, file = null) {
+    const { userName, userEmail, userPassword, gender, city, address } = userData;
 
     const existingUser = await User.findOne({
       where: { userEmail },
@@ -15,11 +16,23 @@ class AuthService {
       throw new Error('Email already registered');
     }
 
-    const user = await User.create({
+    const createData = {
       userName,
       userEmail,
       userPassword,
-    });
+      gender,
+      city,
+      address,
+    };
+
+    if (file) {
+      const profileImageName = await uploadToS3(file);
+      if (profileImageName) { // Only set if upload succeeded
+        createData.profileImage = profileImageName;
+      }
+    }
+
+    const user = await User.create(createData);
 
     const { userPassword: _, ...userWithoutPassword } = user.toJSON();
     return userWithoutPassword;
@@ -63,7 +76,7 @@ class AuthService {
     return userWithoutPassword;
   }
 
-  async updateUser(userId, updateData) {
+  async updateUser(userId, updateData, file) {
     const user = await User.findOne({
       where: { userId },
     });
@@ -72,7 +85,16 @@ class AuthService {
       throw new Error('User not found');
     }
 
-    await user.update(updateData);
+    const updatePayload = { ...updateData };
+
+    if (file) {
+      const profileImageName = await uploadToS3(file);
+      if (profileImageName) { // Only set if upload succeeded
+        updatePayload.profileImage = profileImageName;
+      }
+    }
+
+    await user.update(updatePayload);
 
     const { userPassword: _, ...userWithoutPassword } = user.toJSON();
     return userWithoutPassword;
@@ -83,7 +105,6 @@ class AuthService {
       userId: user.userId,
       userRole: user.userRole,
     };
-
     return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN || '7d',
     });

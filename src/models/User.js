@@ -49,10 +49,10 @@ module.exports = (sequelize) => {
       allowNull: true,
       field: 'address',
     },
-    userProfileImage: {
+    profileImage: {
       type: DataTypes.STRING,
       allowNull: true,
-      field: 'user_profile_image',
+      field: 'profile_image',
     },
   }, {
     tableName: 'users',

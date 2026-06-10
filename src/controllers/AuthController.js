@@ -3,8 +3,9 @@ const AuthService = require('../services/AuthService');
 class AuthController {
   async register(req, res) {
     try {
-      const user = await AuthService.registerUser(req.body);
-
+    
+      const user = await AuthService.registerUser(req.body, req.file);
+      
       res.status(201).json({
         success: true,
         message: 'User registered successfully',
@@ -79,8 +80,7 @@ class AuthController {
   async updateUser(req, res) {
     try {
       console.log(req.body);
-      
-      const user = await AuthService.updateUser(req.user.userId, req.body);
+      const user = await AuthService.updateUser(req.user.userId, req.body, req.file);
 
       res.status(200).json({
         success: true,

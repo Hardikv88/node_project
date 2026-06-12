@@ -189,3 +189,15 @@ Status: Success
 
 ---
 
+
+---
+
+Date & Time: 12 June 2026 at 12:52:23 pm
+Agent Name: Trae AI
+Task Title: Add authentication to getAllPosts API
+Prompt: Require Authorization bearer token for getAllPosts API.
+Response Summary: Updated postRoutes.js to add authenticateToken middleware to getAllPosts route.
+Status: Success
+
+---
+

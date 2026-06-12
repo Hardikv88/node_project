@@ -1,7 +1,7 @@
 const { User } = require('../models');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { uploadToS3 } = require('../utils/s3Uploader');
+const { uploadToS3, deleteFromS3 } = require('../utils/s3Uploader');
 require('dotenv').config();
 
 class AuthService {
@@ -25,14 +25,14 @@ class AuthService {
       address,
     };
 
+    const user = await User.create(createData);
+
     if (file) {
-      const profileImageName = await uploadToS3(file);
+      const profileImageName = await uploadToS3(file, user.userId);
       if (profileImageName) { // Only set if upload succeeded
-        createData.profileImage = profileImageName;
+        await user.update({ profileImage: profileImageName });
       }
     }
-
-    const user = await User.create(createData);
 
     const { userPassword: _, ...userWithoutPassword } = user.toJSON();
     return userWithoutPassword;
@@ -88,7 +88,12 @@ class AuthService {
     const updatePayload = { ...updateData };
 
     if (file) {
-      const profileImageName = await uploadToS3(file);
+      // Delete old image if it exists
+      if (user.profileImage) {
+        await deleteFromS3(user.profileImage);
+      }
+      
+      const profileImageName = await uploadToS3(file, userId);
       if (profileImageName) { // Only set if upload succeeded
         updatePayload.profileImage = profileImageName;
       }

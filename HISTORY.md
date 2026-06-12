@@ -129,3 +129,63 @@ Status: Success
 
 ---
 
+
+---
+
+Date & Time: 11 June 2026 at 01:00:35 pm
+Agent Name: Trae AI
+Task Title: Refactor S3 profile image upload to replace old images
+Prompt: Refactor uploadToS3 functionality. Current problem: every update creates new file, old images remain. Required solution: each user has only one profile image in S3 bucket at users/{userId}/profile.ext, delete old image before uploading new one.
+Response Summary: Added deleteFromS3 function, refactored uploadToS3 to use predictable key format users/{userId}/profile.ext, updated registerUser to upload after user creation, updated updateUser to delete old image before new upload.
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 11 June 2026 at 01:10:42 pm
+Agent Name: Trae AI
+Task Title: Add pagination to getAllUsers API
+Prompt: Implement pagination for getAllUsers API
+Response Summary: Updated getAllUsers to use findAndCountAll, added page and limit query params, returned pagination metadata (currentPage, itemsPerPage, totalItems, totalPages, hasNextPage, hasPreviousPage).
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 11 June 2026 at 01:13:55 pm
+Agent Name: Trae AI
+Task Title: Fix getAllUsers route to use GET method
+Prompt: Fix route method for getAllUsers API
+Response Summary: Corrected userRoutes.js to use router.get instead of router.post for getAllUsers.
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 11 June 2026 at 01:23:58 pm
+Agent Name: Trae AI
+Task Title: Update getAllUsers API to use POST method
+Prompt: Change getAllUsers API to POST method and read page/limit from request body
+Response Summary: Changed route to POST, updated controller to read page/limit from req.body, renamed createUser route to /create to avoid conflict.
+Status: Success
+
+---
+
+
+---
+
+Date & Time: 11 June 2026 at 03:55:33 pm
+Agent Name: Trae AI
+Task Title: Create Posts feature
+Prompt: Create posts table with columns (id, title, body, tags, reactions, views, userId), add relation with user table, create get and add posts APIs.
+Response Summary: Created Post model with all required columns and relation to User model, created PostService, postController, postRoutes, added routes to main index.
+Status: Success
+
+---
+

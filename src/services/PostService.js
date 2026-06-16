@@ -2,15 +2,21 @@ const { Post, User } = require('../models');
 
 class PostService {
   async createPost(postData, userId) {
+    console.log('PostService.createPost called with:', { postData, userId });
+    
     const post = await Post.create({
       ...postData,
       userId: userId,
     });
+    
+    console.log('Post created in database:', post.toJSON());
     return post;
   }
 
-  async getAllPosts() {
-    const posts = await Post.findAll({
+  async getAllPosts(page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    
+    const { count, rows } = await Post.findAndCountAll({
       include: [
         {
           model: User,
@@ -19,8 +25,11 @@ class PostService {
         },
       ],
       order: [['created_at', 'DESC']],
+      limit: limit,
+      offset: offset,
     });
-    return posts;
+    
+    return { count, rows };
   }
 
   async getPostById(postId) {

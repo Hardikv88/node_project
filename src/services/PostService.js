@@ -2,10 +2,14 @@ const { Post, User } = require('../models');
 
 class PostService {
   async createPost(postData, userId) {
+    console.log('PostService.createPost called with:', { postData, userId });
+    
     const post = await Post.create({
       ...postData,
       userId: userId,
     });
+    
+    console.log('Post created in database:', post.toJSON());
     return post;
   }
 

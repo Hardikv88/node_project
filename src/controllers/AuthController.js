@@ -1,9 +1,8 @@
 const AuthService = require('../services/AuthService');
 
 class AuthController {
-  async register(req, res) {
+  async register(req, res, next) {
     try {
-    
       const user = await AuthService.registerUser(req.body, req.file);
       
       res.status(201).json({
@@ -12,22 +11,11 @@ class AuthController {
         data: user,
       });
     } catch (error) {
-      let statusCode = 500;
-      let message = 'Internal server error';
-
-      if (error.message === 'Email already registered') {
-        statusCode = 409;
-        message = error.message;
-      }
-
-      res.status(statusCode).json({
-        success: false,
-        message,
-      });
+      next(error);
     }
   }
 
-  async login(req, res) {
+  async login(req, res, next) {
     try {
       const result = await AuthService.loginUser(req.body);
 
@@ -37,24 +25,13 @@ class AuthController {
         data: result,
       });
     } catch (error) {
-      let statusCode = 500;
-      let message = 'Internal server error';
-
-      if (error.message === 'Invalid credentials') {
-        statusCode = 401;
-        message = error.message;
-      }
-
-      res.status(statusCode).json({
-        success: false,
-        message,
-      });
+      next(error);
     }
   }
 
-  async getMe(req, res) {
+  async getMe(req, res, next) {
     try {
-      const user = await AuthService.getUserById(req.user.userId);
+      const user = await AuthService.getUserById(req.user.id);
 
       res.status(200).json({
         success: true,
@@ -62,25 +39,13 @@ class AuthController {
         data: user,
       });
     } catch (error) {
-      let statusCode = 500;
-      let message = 'Internal server error';
-
-      if (error.message === 'User not found') {
-        statusCode = 404;
-        message = error.message;
-      }
-
-      res.status(statusCode).json({
-        success: false,
-        message,
-      });
+      next(error);
     }
   }
 
-  async updateUser(req, res) {
+  async updateUser(req, res, next) {
     try {
-      console.log(req.body);
-      const user = await AuthService.updateUser(req.user.userId, req.body, req.file);
+      const user = await AuthService.updateUser(req.user.id, req.body, req.file);
 
       res.status(200).json({
         success: true,
@@ -88,18 +53,7 @@ class AuthController {
         data: user,
       });
     } catch (error) {
-      let statusCode = 500;
-      let message = 'Internal server error';
-
-      if (error.message === 'User not found') {
-        statusCode = 404;
-        message = error.message;
-      }
-
-      res.status(statusCode).json({
-        success: false,
-        message,
-      });
+      next(error);
     }
   }
 }

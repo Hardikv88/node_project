@@ -1,18 +1,8 @@
 const PostService = require('../services/PostService');
 
 class PostController {
-  async createPost(req, res) {
+  async createPost(req, res, next) {
     try {
-      console.log('Creating post with data:', req.body);
-      console.log('User ID from token:', req.user?.userId);
-      
-      if (!req.user?.userId) {
-        return res.status(401).json({
-          success: false,
-          message: 'User not authenticated',
-        });
-      }
-      
       const { title, body } = req.body;
       
       if (!title || title.trim() === '') {
@@ -29,28 +19,22 @@ class PostController {
         });
       }
       
-      const post = await PostService.createPost(req.body, req.user.userId);
-      
-      console.log('Post created successfully:', post);
+      const post = await PostService.createPost(req.body, req.user.id);
       
       res.status(201).json({
         success: true,
+        message: 'Post created successfully',
         data: post,
       });
     } catch (error) {
-      console.error('Error creating post:', error);
-      res.status(500).json({
-        success: false,
-        message: error.message,
-        details: error.stack,
-      });
+      next(error);
     }
   }
 
-  async getAllPosts(req, res) {
+  async getAllPosts(req, res, next) {
     try {
-      const page = parseInt(req.body.page, 10) || 1;
-      const limit = parseInt(req.body.limit, 10) || 10;
+      const page = Math.max(1, parseInt(req.query.page || '1', 10));
+      const limit = Math.max(1, Math.min(100, parseInt(req.query.limit || '10', 10)));
       
       const { count, rows } = await PostService.getAllPosts(page, limit);
       
@@ -60,8 +44,9 @@ class PostController {
       
       res.status(200).json({
         success: true,
+        message: 'Posts retrieved successfully',
         data: rows,
-        pagination: {
+        meta: {
           currentPage: page,
           itemsPerPage: limit,
           totalItems: count,
@@ -71,20 +56,17 @@ class PostController {
         },
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   }
 
-  async getPostById(req, res) {
+  async getPostById(req, res, next) {
     try {
-      const postId = req.body.postId;    
+      const postId = req.params.id || req.query.id || req.body.postId;    
       if (!postId) {    
         return res.status(400).json({    
           success: false,    
-          message: 'postId is required',    
+          message: 'Post ID is required',    
         });    
       }    
       
@@ -98,13 +80,11 @@ class PostController {
       
       res.status(200).json({
         success: true,
+        message: 'Post retrieved successfully',
         data: post,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: error.message,
-      });
+      next(error);
     }
   }
 }

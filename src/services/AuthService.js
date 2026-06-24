@@ -28,8 +28,8 @@ class AuthService {
     const user = await User.create(createData);
 
     if (file) {
-      const profileImageName = await uploadToS3(file, user.userId);
-      if (profileImageName) { // Only set if upload succeeded
+      const profileImageName = await uploadToS3(file, user.id);
+      if (profileImageName) {
         await user.update({ profileImage: profileImageName });
       }
     }
@@ -64,9 +64,7 @@ class AuthService {
   }
 
   async getUserById(userId) {
-    const user = await User.findOne({
-      where: { userId },
-    });
+    const user = await User.findByPk(userId);
 
     if (!user) {
       throw new Error('User not found');
@@ -77,9 +75,7 @@ class AuthService {
   }
 
   async updateUser(userId, updateData, file) {
-    const user = await User.findOne({
-      where: { userId },
-    });
+    const user = await User.findByPk(userId);
 
     if (!user) {
       throw new Error('User not found');
@@ -88,13 +84,12 @@ class AuthService {
     const updatePayload = { ...updateData };
 
     if (file) {
-      // Delete old image if it exists
       if (user.profileImage) {
         await deleteFromS3(user.profileImage);
       }
       
       const profileImageName = await uploadToS3(file, userId);
-      if (profileImageName) { // Only set if upload succeeded
+      if (profileImageName) {
         updatePayload.profileImage = profileImageName;
       }
     }
@@ -107,7 +102,7 @@ class AuthService {
 
   generateToken(user) {
     const payload = {
-      userId: user.userId,
+      id: user.id,
       userRole: user.userRole,
     };
     return jwt.sign(payload, process.env.JWT_SECRET, {

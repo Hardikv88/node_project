@@ -2,38 +2,22 @@ const { DataTypes } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
-  const Post = sequelize.define('Post', {
+  const Quote = sequelize.define('Quote', {
     id: {
       type: DataTypes.UUID,
       defaultValue: () => uuidv4(),
       primaryKey: true,
+      field: 'id',
     },
-    title: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    body: {
+    quotes: {
       type: DataTypes.TEXT,
       allowNull: false,
+      field: 'quotes',
     },
-    tags: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
-    likes: {
-      type: DataTypes.INTEGER,
+    author: {
+      type: DataTypes.TEXT,
       allowNull: false,
-      defaultValue: 0,
-    },
-    dislikes: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
-    },
-    views: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0,
+      field: 'author',
     },
     userId: {
       type: DataTypes.UUID,
@@ -56,20 +40,20 @@ module.exports = (sequelize) => {
       field: 'deleted_by',
     },
   }, {
-    tableName: 'posts', 
-    timestamps: true, 
-    createdAt: 'created_at', 
-    updatedAt: 'updated_at', 
+    tableName: 'quotes',
+    timestamps: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
     deletedAt: 'deleted_at',
     paranoid: true,
   });
 
-  Post.associate = function(models) {
-    Post.belongsTo(models.User, {
+  Quote.associate = function(models) {
+    Quote.belongsTo(models.User, {
       foreignKey: 'userId',
       as: 'user',
     });
   };
 
-  return Post;
+  return Quote;
 };

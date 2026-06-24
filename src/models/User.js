@@ -1,13 +1,14 @@
 const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize) => {
   const User = sequelize.define('User', {
-    userId: {
-      type: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: () => uuidv4(),
       primaryKey: true,
-      autoIncrement: true,
-      field: 'user_id',
+      field: 'id',
     },
     userName: {
       type: DataTypes.STRING,
@@ -29,9 +30,9 @@ module.exports = (sequelize) => {
       field: 'user_password',
     },
     userRole: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('super_admin', 'admin', 'user'),
       allowNull: false,
-      defaultValue: 'User',
+      defaultValue: 'user',
       field: 'user_role',
     },
     gender: {
@@ -54,11 +55,28 @@ module.exports = (sequelize) => {
       allowNull: true,
       field: 'profile_image',
     },
+    createdBy: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'created_by',
+    },
+    updatedBy: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'updated_by',
+    },
+    deletedBy: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      field: 'deleted_by',
+    },
   }, {
     tableName: 'users',
     timestamps: true,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
+    deletedAt: 'deleted_at',
+    paranoid: true,
     hooks: {
       beforeCreate: async (user) => {
         const saltRounds = 10;
@@ -66,6 +84,13 @@ module.exports = (sequelize) => {
       },
     },
   });
+
+  User.associate = function(models) {
+    User.hasMany(models.Quote, {
+      foreignKey: 'userId',
+      as: 'quotes',
+    });
+  };
 
   return User;
 };
